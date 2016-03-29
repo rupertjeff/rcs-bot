@@ -9,6 +9,8 @@
  */
 namespace Rcs\Bot\Tests;
 
+use Discord\Cache\Cache;
+use Discord\Cache\Drivers\ArrayCacheDriver;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 
@@ -20,6 +22,13 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 class PostDiscordMessageTest extends TestCase
 {
     use DatabaseMigrations, WithoutMiddleware;
+
+    protected function setUp()
+    {
+        parent::setUp();
+        
+        Cache::setCache(new ArrayCacheDriver());
+    }
 
     /**
      * @test

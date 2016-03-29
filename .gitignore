@@ -1,6 +1,7 @@
 /vendor
 /discord
 /node_modules
+/public/discord
 /public/storage
 .env
 composer.lock
