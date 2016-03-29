@@ -17,7 +17,6 @@ class CustomMessage
     {
         $view->with('formSetup', [
             'route' => 'demos.customMessage',
-            'method' => 'post',
         ]);
     }
 }

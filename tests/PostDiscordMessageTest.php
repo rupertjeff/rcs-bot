@@ -29,7 +29,7 @@ class PostDiscordMessageTest extends TestCase
 
         /**
          * No need to use apc and create files from tests.
-         * 
+         *
          * TODO: Move this into a Facade
          */
         Cache::setCache(new ArrayCacheDriver());

@@ -216,6 +216,8 @@ return [
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
 
+        'Discord' => Rcs\Bot\Facades\Discord::class,
+
     ],
 
 ];

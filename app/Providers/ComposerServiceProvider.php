@@ -11,6 +11,7 @@ namespace Rcs\Bot\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Rcs\Bot\Http\Composers\Demos\CustomMessage;
+use Rcs\Bot\Http\Composers\Demos\DirectMessage;
 
 class ComposerServiceProvider extends ServiceProvider
 {
@@ -22,5 +23,6 @@ class ComposerServiceProvider extends ServiceProvider
     public function register()
     {
         view()->composer('partials.demos.customMessage', CustomMessage::class);
+        view()->composer('partials.demos.directMessage', DirectMessage::class);
     }
 }

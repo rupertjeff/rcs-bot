@@ -2,7 +2,9 @@
 
 namespace Rcs\Bot\Providers;
 
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
+use Rcs\Bot\Services\Discord;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,6 +25,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->singleton('discord', function (Application $app) {
+            return new Discord(
+                env('DISCORD_USER', null),
+                env('DISCORD_PASSWORD', null)
+            );
+        });
     }
 }
