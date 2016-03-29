@@ -1,8 +1,9 @@
-@if (session()->has('status')){{ session('status') }}@endif
-<a href="/postMessage" id="post-message">Post Message</a>
+@extends('layouts.default')
 
-<form method="post" action="/sendCustomMessage">
-    <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
-    <input type="text" name="message"/>
-    <button type="submit" id="submit-custom-message">Submit</button>
-</form>
+@section('content')
+    <h1>Discord Demos</h1>
+
+    @if (session()->has('status'))<div class="alert alert-success">{{ session('status') }}</div>@endif
+
+    @include('partials.demos.customMessage')
+@endsection

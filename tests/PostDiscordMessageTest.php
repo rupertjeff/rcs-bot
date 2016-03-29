@@ -26,30 +26,13 @@ class PostDiscordMessageTest extends TestCase
     protected function setUp()
     {
         parent::setUp();
-        
+
+        /**
+         * No need to use apc and create files from tests.
+         * 
+         * TODO: Move this into a Facade
+         */
         Cache::setCache(new ArrayCacheDriver());
-    }
-
-    /**
-     * @test
-     */
-    public function it_shows_a_list_of_actions()
-    {
-        $this->visit('/')
-            ->see('Post Message');
-    }
-
-    /**
-     * @test
-     */
-    public function it_sends_a_message()
-    {
-        $this->visit('/')
-            ->click('#post-message')
-            ->see('Message Posted!')
-            ->seeInDatabase('messages', [
-                'content' => 'Message',
-            ]);
     }
 
     /**
