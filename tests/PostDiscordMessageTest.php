@@ -1,0 +1,60 @@
+<?php
+/**
+ * Name: PostDiscordMessageTest.php
+ * Description:
+ * Version: 0.0.1
+ * Author: jeffr
+ * Created: 2016-03-28
+ * Last Modified: 2016-03-28
+ */
+namespace Rcs\Bot\Tests;
+
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+
+/**
+ * Class PostDiscordMessageTest
+ *
+ * @package Rcs\Bot\Tests
+ */
+class PostDiscordMessageTest extends TestCase
+{
+    use DatabaseMigrations, WithoutMiddleware;
+
+    /**
+     * @test
+     */
+    public function it_shows_a_list_of_actions()
+    {
+        $this->visit('/')
+            ->see('Post Message');
+    }
+
+    /**
+     * @test
+     */
+    public function it_sends_a_message()
+    {
+        $this->visit('/')
+            ->click('#post-message')
+            ->see('Message Posted!')
+            ->seeInDatabase('messages', [
+                'content' => 'Message',
+            ]);
+    }
+
+    /**
+     * @test
+     */
+    public function it_sends_custom_messages()
+    {
+        $message = 'This is a custom message.';
+        $this->visit('/')
+            ->type($message, 'message')
+            ->press('submit-custom-message')
+            ->see('Message Posted!')
+            ->seeInDatabase('messages', [
+                'content' => $message,
+            ]);
+    }
+}
