@@ -49,4 +49,21 @@ class PostDiscordMessageTest extends TestCase
                 'content' => $message,
             ]);
     }
+
+    /**
+     * @test
+     */
+    public function it_sends_custom_messages_at_user_defined_times()
+    {
+        $message = 'This is a delayed message.';
+        $this->visit('/')
+            ->type($message, 'delayed-message')
+            ->select(60, 'delayed-delay')
+            ->press('submit-delayed-message');
+
+        $this->see('Message Posted!')
+            ->seeInDatabase('messages', [
+                'content' => $message,
+            ]);
+    }
 }

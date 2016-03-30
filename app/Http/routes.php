@@ -18,12 +18,22 @@ Route::get('/', function () {
 Route::post('sendCustomMessage', [
     'as' => 'demos.customMessage', function (\Illuminate\Http\Request $request) {
         $content  = $request->get('message');
-        $channel  = Discord::getChannel('bot-testing');
-        $dMessage = $channel->sendMessage($content);
-        \Rcs\Bot\Database\Models\Message::create([
-            'content' => $dMessage->content,
-        ]);
+        
+        $job = new \Rcs\Bot\Jobs\SendMessage($content);
+        dispatch($job);
 
+        return redirect('/')
+            ->with('status', 'Message Posted!');
+    },
+]);
+
+Route::post('sendDelayedMessage', [
+    'as' => 'demos.delayedMessage', function (\Illuminate\Http\Request $request) {
+        $content = $request->get('delayed-message');
+
+        $job = (new \Rcs\Bot\Jobs\SendMessage($content))->delay((int)$request->get('delayed-delay'));
+        dispatch($job);
+        
         return redirect('/')
             ->with('status', 'Message Posted!');
     },
