@@ -38,3 +38,15 @@ Route::post('sendDelayedMessage', [
             ->with('status', 'Message Posted!');
     },
 ]);
+
+Route::post('sendChannelMessage', [
+    'as' => 'demos.channelMessage', function (\Illuminate\Http\Request $request) {
+        $content = $request->get('channel-message');
+        $channel = $request->get('channel-name');
+        
+        dispatch(new \Rcs\Bot\Jobs\SendMessage($content, $channel));
+        
+        return redirect('/')
+            ->with('status', 'Message Posted!');
+    },
+]);

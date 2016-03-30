@@ -7,4 +7,5 @@
 
     @include('partials.demos.customMessage')
     @include('partials.demos.delayedMessage')
+    @include('partials.demos.channelMessage')
 @endsection

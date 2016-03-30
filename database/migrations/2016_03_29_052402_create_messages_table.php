@@ -19,6 +19,7 @@ class CreateMessagesTable extends Migration
             $table->increments('id');
 
             $table->text('content');
+            $table->string('channel');
 
             $table->timestamps();
         });

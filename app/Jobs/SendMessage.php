@@ -2,6 +2,7 @@
 
 namespace Rcs\Bot\Jobs;
 
+use Discord;
 use Rcs\Bot\Database\Models\Message;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -22,13 +23,20 @@ class SendMessage extends Job implements ShouldQueue
     private $message;
 
     /**
+     * @var string
+     */
+    private $channel;
+
+    /**
      * Create a new job instance.
      *
      * @param string $message
+     * @param string $channel
      */
-    public function __construct(string $message)
+    public function __construct(string $message, string $channel = '')
     {
         $this->message = $message;
+        $this->channel = $channel ?? env('DISCORD_CHANNEL');
     }
 
     /**
@@ -38,9 +46,10 @@ class SendMessage extends Job implements ShouldQueue
      */
     public function handle()
     {
-        $message = \Discord::getChannel('bot-testing')->sendMessage($this->message);
+        $message = Discord::getChannel($this->channel)->sendMessage($this->message);
         Message::create([
             'content' => $message->content,
+            'channel' => $this->channel,
         ]);
     }
 }

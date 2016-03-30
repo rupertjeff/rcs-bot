@@ -27,11 +27,6 @@ class Discord
     protected $instance;
 
     /**
-     * @var WebSocket
-     */
-    protected $socket;
-
-    /**
      * Discord constructor.
      *
      * @param string $email
@@ -41,7 +36,14 @@ class Discord
     public function __construct(string $email, string $password, string $token = null)
     {
         $this->instance = new \Discord\Discord($email, $password, $token);
-        $this->socket   = new WebSocket($this->instance);
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getChannels(): Collection
+    {
+        return $this->getGuild()->channels->where('type', 'text');
     }
 
     /**
@@ -49,9 +51,21 @@ class Discord
      *
      * @return Channel
      */
-    public function getChannel(string $channelName): Channel
+    public function getChannel(string $channelName = ''): Channel
     {
-        return $this->getGuild()->channels->where('name', $channelName)->first();
+        if ('' === $channelName) {
+            return $this->getChannels()->first();
+        }
+        
+        return $this->getChannels()->where('name', $channelName)->first();
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getGuilds(): Collection
+    {
+        return $this->instance->guilds;
     }
 
     /**
@@ -62,17 +76,9 @@ class Discord
     public function getGuild(string $guildName = ''): Guild
     {
         if ('' === $guildName) {
-            return $this->instance->guilds->first();
+            return $this->getGuilds()->first();
         }
 
-        return $this->instance->guilds->where('name', $guildName)->first();
-    }
-
-    /**
-     * @return Collection
-     */
-    public function getUsers(): Collection
-    {
-        return $this->getGuild()->members;
+        return $this->getGuilds()->where('name', $guildName)->first();
     }
 }

@@ -10,6 +10,7 @@
 namespace Rcs\Bot\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Rcs\Bot\Http\Composers\Demos\ChannelMessage;
 use Rcs\Bot\Http\Composers\Demos\CustomMessage;
 use Rcs\Bot\Http\Composers\Demos\DelayedMessage;
 
@@ -22,6 +23,7 @@ class ComposerServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        view()->composer('partials.demos.channelMessage', ChannelMessage::class);
         view()->composer('partials.demos.customMessage', CustomMessage::class);
         view()->composer('partials.demos.delayedMessage', DelayedMessage::class);
     }
