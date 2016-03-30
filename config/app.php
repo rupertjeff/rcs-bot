@@ -162,11 +162,6 @@ return [
         Rcs\Bot\Providers\EventServiceProvider::class,
         Rcs\Bot\Providers\RouteServiceProvider::class,
 
-        /*
-         * Dev only Service Providers...
-         */
-        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
-
     ],
 
     /*

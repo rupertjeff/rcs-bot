@@ -2,6 +2,7 @@
 
 namespace Rcs\Bot\Providers;
 
+use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use Rcs\Bot\Services\Discord;
@@ -25,6 +26,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        if ( ! $this->app->environment('production')) {
+            $this->app->register(IdeHelperServiceProvider::class);
+        }
         $this->app->singleton('discord', function (Application $app) {
             return new Discord(
                 env('DISCORD_USER', null),
