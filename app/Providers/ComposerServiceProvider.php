@@ -14,6 +14,11 @@ use Rcs\Bot\Http\Composers\Demos\ChannelMessage;
 use Rcs\Bot\Http\Composers\Demos\CustomMessage;
 use Rcs\Bot\Http\Composers\Demos\DelayedMessage;
 
+/**
+ * Class ComposerServiceProvider
+ *
+ * @package Rcs\Bot\Providers
+ */
 class ComposerServiceProvider extends ServiceProvider
 {
     /**

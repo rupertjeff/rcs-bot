@@ -12,8 +12,18 @@ namespace Rcs\Bot\Commands;
 use Discord\Parts\Channel\Message;
 use Rcs\Bot\Database\Models\Command;
 
+/**
+ * Class ListAllCommand
+ *
+ * @package Rcs\Bot\Commands
+ */
 class ListAllCommand
 {
+    /**
+     * @param Message $message
+     *
+     * @return string
+     */
     public function handle(Message $message)
     {
         /** @var \Illuminate\Support\Collection $commands */

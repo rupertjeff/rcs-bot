@@ -44,7 +44,7 @@ class PostDiscordMessageTest extends TestCase
         $this->expectsJobs(SendMessage::class);
 
         $message = 'This is a custom message.';
-        $this->visit('/')
+        $this->visit(route('demos.index'))
             ->type($message, 'message')
             ->press('submit-custom-message')
             ->see('Message Posted!');
@@ -58,7 +58,7 @@ class PostDiscordMessageTest extends TestCase
         $this->expectsJobs(SendMessage::class);
 
         $message = 'This is a delayed message.';
-        $this->visit('/')
+        $this->visit(route('demos.index'))
             ->type($message, 'delayed-message')
             ->select(60, 'delayed-delay')
             ->press('submit-delayed-message')
@@ -71,7 +71,7 @@ class PostDiscordMessageTest extends TestCase
     public function it_sends_custom_messages_to_user_defined_channels()
     {
         $generalMessage = 'This message went to the #general channel.';
-        $this->visit('/')
+        $this->visit(route('demos.index'))
             ->type($generalMessage, 'channel-message')
             ->select('general', 'channel-name')
             ->press('submit-channel-message')
@@ -82,7 +82,7 @@ class PostDiscordMessageTest extends TestCase
             ]);
 
         $testingMessage = 'This message went to the #bot-testing channel.';
-        $this->visit('/')
+        $this->visit(route('demos.index'))
             ->type($testingMessage, 'channel-message')
             ->select('bot-testing', 'channel-name')
             ->press('submit-channel-message')
