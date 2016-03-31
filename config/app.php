@@ -211,6 +211,7 @@ return [
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
 
+        'Bot'     => Rcs\Bot\Facades\Bot::class,
         'Discord' => Rcs\Bot\Facades\Discord::class,
 
     ],
