@@ -152,6 +152,7 @@ return [
          * Third Party Providers...
          */
         Collective\Html\HtmlServiceProvider::class,
+        Spatie\Fractal\FractalServiceProvider::class,
 
         /*
          * Application Service Providers...

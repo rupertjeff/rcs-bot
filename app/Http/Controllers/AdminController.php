@@ -9,9 +9,19 @@
  */
 namespace Rcs\Bot\Http\Controllers;
 
+use Illuminate\View\View;
+
+/**
+ * Class AdminController
+ *
+ * @package Rcs\Bot\Http\Controllers
+ */
 class AdminController extends Controller
 {
-    public function index()
+    /**
+     * @return View
+     */
+    public function index(): View
     {
         return view('pages.index');
     }

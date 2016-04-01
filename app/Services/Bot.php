@@ -11,6 +11,7 @@ namespace Rcs\Bot\Services;
 
 use Discord\Parts\Channel\Message;
 use Illuminate\Support\Collection;
+use Log;
 use Rcs\Bot\Database\Models\Command;
 
 /**
@@ -36,40 +37,52 @@ class Bot
     protected $commands;
 
     /**
+     * @var \Illuminate\Console\Command
+     */
+    protected $consoleCommand;
+
+    /**
+     * @var array
+     */
+    protected $defaultCommands;
+
+    /**
      * Bot constructor.
      *
      * @param array $commands
-     *
-     * @throws \InvalidArgumentException
      */
     public function __construct(array $commands = [])
     {
         $this->callableDelimiter = config('bot.delimiters.callable', '@');
         $this->commandDelimiter  = config('bot.delimiters.command', '!');
         $this->commands          = collect([]);
-        $this->initDatabaseCommands();
+        $this->defaultCommands   = $commands;
+        
         $this->initCommands($commands);
     }
 
     /**
-     * @throws \InvalidArgumentException
-     */
-    protected function initDatabaseCommands()
-    {
-        $commands = Command::all();
-        $this->commands = $commands->keyBy('command');
-    }
-
-    /**
      * @param array $commands
-     *
-     * @throws \InvalidArgumentException
      */
     protected function initCommands(array $commands = [])
     {
+        $this->initDatabaseCommands();
         foreach ($commands as $command => $action) {
-            $this->defineCommand($command, $action);
+            try {
+                $this->defineCommand($command, $action);
+            } catch (\InvalidArgumentException $e) {
+                Log::error('Invalid command: [' . $command . '], [' . $action . ']');
+            }
         }
+    }
+
+    /**
+     *
+     */
+    protected function initDatabaseCommands()
+    {
+        $commands       = Command::all();
+        $this->commands = $commands->keyBy('command');
     }
 
     /**
@@ -149,7 +162,11 @@ class Bot
      */
     protected function processAction(Command $command, Message $message): string
     {
-        if (starts_with($command->action, '\\') || ! str_contains($command->action, ' ')) {
+        $check = $command->action;
+        if (str_contains($check, $this->callableDelimiter)) {
+            list($check) = explode($this->callableDelimiter, $check);
+        }
+        if (class_exists($check)) {
             $class  = $command->action;
             $method = 'handle';
             if (str_contains($command->action, $this->callableDelimiter)) {
@@ -168,5 +185,27 @@ class Bot
     public function getCommands(): Collection
     {
         return $this->commands;
+    }
+
+    /**
+     * @param \Illuminate\Console\Command $command
+     *
+     * @return $this
+     */
+    public function setConsoleCommand(\Illuminate\Console\Command $command)
+    {
+        $this->consoleCommand = $command;
+        
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function refreshCommands()
+    {
+        $this->initCommands($this->defaultCommands);
+
+        return $this;
     }
 }

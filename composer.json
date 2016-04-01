@@ -10,7 +10,9 @@
         "predis/predis": "^1.0",
         "team-reflex/discord-php": "^3.1",
         "pda/pheanstalk": "^3.1",
-        "laravelcollective/html": "^5.2"
+        "laravelcollective/html": "^5.2",
+        "spatie/laravel-fractal": "^1.9",
+        "doctrine/dbal": "^2.5"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

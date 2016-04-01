@@ -19,3 +19,11 @@ $factory->define(Rcs\Bot\User::class, function (Faker\Generator $faker) {
         'remember_token' => str_random(10),
     ];
 });
+
+$factory->define(\Rcs\Bot\Database\Models\Command::class, function (\Faker\Generator $faker) {
+    return [
+        'command' => config('bot.delimiters.command', '!') . $faker->word,
+        'action' => $faker->sentence(6, true),
+        'reply' => $faker->boolean()
+    ];
+});

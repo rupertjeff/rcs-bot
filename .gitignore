@@ -1,7 +1,10 @@
 /vendor
 /discord
 /node_modules
+/public/css
 /public/discord
+/public/fonts
+/public/js
 /public/storage
 .env
 composer.lock

@@ -11,7 +11,7 @@
 |
 */
 
-Route::group(['prefix' => 'demos'], function () {
+Route::group(['prefix' => 'demos', 'middleware' => 'verify'], function () {
     Route::post('sendCustomMessage', [
         'as' => 'demos.customMessage', function (\Illuminate\Http\Request $request) {
             $content = $request->get('message');
@@ -56,6 +56,19 @@ Route::group(['prefix' => 'demos'], function () {
             return view('pages.demos.index');
         }
     ]);
+});
+
+Route::group(['prefix' => 'api'], function () {
+    Route::group(['prefix' => 'commands'], function () {
+        Route::get('/', ['uses' => 'CommandController@index', 'as' => 'commands.index']);
+        Route::post('/', ['uses' => 'CommandController@store', 'as' => 'commands.store']);
+        Route::put('/{command}', ['uses' => 'CommandController@update', 'as' => 'commands.update']);
+        Route::delete('/{command}', ['uses' => 'CommandController@delete', 'as' => 'commands.delete']);
+    });
+    
+    Route::group(['prefix' => 'templates'], function () {
+        Route::get('commands/listing', ['uses' => 'TemplateController@commandListing', 'as' => 'templates.commands.listing']);
+    });
 });
 
 Route::get('/', ['uses' => 'AdminController@index', 'as' => 'admin.index']);

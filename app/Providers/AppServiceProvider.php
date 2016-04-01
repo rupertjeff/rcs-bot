@@ -3,6 +3,7 @@
 namespace Rcs\Bot\Providers;
 
 use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
+use Bot as BotFacade;
 use Discord\Parts\Channel\Message;
 use Discord\WebSockets\Event;
 use Illuminate\Contracts\Foundation\Application;
@@ -46,11 +47,12 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(Server::class, function () {
             $events = [
                 Event::MESSAGE_CREATE => function (Message $message, \Discord\Discord $discord) {
+                    BotFacade::refreshCommands();
                     // Is this a valid command? If no, ignore.
                     if (starts_with($message->content, '!')) {
-                        $pieces = explode(' ', $message->content);
+                        $pieces  = explode(' ', $message->content);
                         $command = array_shift($pieces);
-                        \Bot::executeCommand($command, $message);
+                        BotFacade::executeCommand($command, $message);
                     }
                 },
             ];
