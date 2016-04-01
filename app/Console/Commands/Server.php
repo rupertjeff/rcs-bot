@@ -53,6 +53,7 @@ class Server extends Command
     public function handle()
     {
         $this->line('Start Server');
+        \Bot::setConsoleCommand($this);
         Discord::setCommand($this)->run();
     }
 

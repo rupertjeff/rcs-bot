@@ -1,2 +1,12 @@
-@import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+$fa-font-path: '../../fonts';
 
+@import "node_modules/font-awesome/scss/font-awesome";
+@import "node_modules/bootstrap/scss/bootstrap";
+
+.ng-valid[required] {
+    border-left: 5px solid $brand-success;
+}
+
+.ng-invalid {
+    border-left: 5px solid $brand-danger;
+}
