@@ -147,11 +147,10 @@ class Discord
 
     /**
      * @param WebSocket $ws
-     * @param Command   $command
      *
      * @return $this
      */
-    protected function attachEvents(WebSocket $ws, Command $command = null)
+    protected function attachEvents(WebSocket $ws)
     {
         foreach ($this->events as $event) {
             $ws->on($event['event'], $event['action']);

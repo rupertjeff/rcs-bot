@@ -13,6 +13,7 @@ use Discord\Parts\Channel\Message;
 use Illuminate\Support\Collection;
 use Log;
 use Rcs\Bot\Database\Models\Command;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class Bot
@@ -154,52 +155,29 @@ class Bot
     {
         if ( ! $this->commands->has($command)) {
             $this->displayMessage('Command [' . $command . '] does not exist.');
+
             return false;
         }
 
         /** @var Command $item */
         $item = $this->commands[$command];
 
-        $response = $this->processAction($item, $message);
-        if ('' === $response) {
-            $this->displayMessage('Command [' . $command . '] succeeded, no output.');
-            return true;
-        }
-
-        if ($item->replyToUser()) {
-            $message->reply($response);
-        } else {
-            $message->channel->sendMessage($response);
-        }
-
-        return true;
+        return $this->processAction($item, $message);
     }
 
     /**
      * @param Command $command
      * @param Message $message
      *
-     * @return string
+     * @return bool
      */
-    protected function processAction(Command $command, Message $message): string
+    protected function processAction(Command $command, Message $message): bool
     {
-        $check = $command->action;
-        if (str_contains($check, $this->callableDelimiter)) {
-            list($check) = explode($this->callableDelimiter, $check);
+        if ($this->isMessageClass($command)) {
+            return $this->runActionClass($command, $message);
         }
-        if (class_exists($check)) {
-            $class  = $command->action;
-            $method = 'handle';
-            if (str_contains($command->action, $this->callableDelimiter)) {
-                list($class, $method) = explode($this->callableDelimiter, $command->action);
-            }
-            $this->displayMessage('Command [' . $command->command . '] running ' . $class . '@' . $method);
 
-            return call_user_func_array([app($class), $method], [$message]);
-        }
-        $this->displayMessage('Command [' . $command->command . '] simply replies with a message.');
-
-        return $command->action;
+        return $this->sendMessage($command, $message);
     }
 
     /**
@@ -208,6 +186,16 @@ class Bot
     public function getCommands(): Collection
     {
         return $this->commands;
+    }
+
+    /**
+     * @return $this
+     */
+    public function refreshCommands()
+    {
+        $this->initCommands($this->defaultCommands);
+
+        return $this;
     }
 
     /**
@@ -226,20 +214,86 @@ class Bot
      * @param string $message
      * @param string $func
      */
-    protected function displayMessage(string $message, string $func = 'line')
+    protected function displayMessage(string $message, string $func = 'info')
     {
-        if (null !== $this->consoleCommand) {
-            $this->consoleCommand->$func($message);
+        if (null !== $this->consoleCommand && method_exists($this->consoleCommand, $func)) {
+            if ('line' === $func) {
+                $this->consoleCommand->line($message, null, OutputInterface::VERBOSITY_VERBOSE);
+            } else {
+                $this->consoleCommand->$func($message, OutputInterface::VERBOSITY_VERBOSE);
+            }
         }
     }
 
     /**
-     * @return $this
+     * @param Command $command
+     * @param Message $message
+     *
+     * @return bool
      */
-    public function refreshCommands()
+    protected function sendMessage(Command $command, Message $message): bool
     {
-        $this->initCommands($this->defaultCommands);
+        $this->displayMessage('Command [' . $command->command . '] simply replies with a message.');
+        if ($command->replyToUser()) {
+            $message->reply($command->action);
+        } else {
+            $message->channel->sendMessage($command->action);
+        }
 
-        return $this;
+        return true;
+    }
+
+    /**
+     * @param Command $command
+     *
+     * @return bool
+     */
+    protected function isMessageClass(Command $command): bool
+    {
+        $check = $command->action;
+        if (str_contains($check, $this->callableDelimiter)) {
+            list($check) = explode($this->callableDelimiter, $check);
+        }
+
+        return class_exists($check);
+    }
+
+    /**
+     * @param Command $command
+     * @param Message $message
+     *
+     * @return bool
+     */
+    protected function runActionClass(Command $command, Message $message): bool
+    {
+        list($class, $method) = $this->getActionClass($command);
+
+        $this->displayMessage('Command [' . $command->command . '] running ' . $class . '@' . $method);
+        try {
+            app($class)->$method($message);
+            $this->displayMessage('Command [' . $command->command . '] succeeded, no output.');
+
+            return true;
+        } catch (\Exception $e) {
+            $this->displayMessage('Command [' . $command->command . '] failed.');
+            
+            return false;
+        }
+    }
+
+    /**
+     * @param Command $command
+     *
+     * @return array
+     */
+    protected function getActionClass(Command $command): array
+    {
+        $class  = $command->action;
+        $method = 'handle';
+        if (str_contains($command->action, $this->callableDelimiter)) {
+            list($class, $method) = explode($this->callableDelimiter, $command->action);
+        }
+
+        return [$class, $method];
     }
 }
