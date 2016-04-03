@@ -1,10 +1,18 @@
 <?php
 
 return [
+    
+    'guild' => env('DISCORD_GUILD'),
 
     'commands' => [
         '!commands' => \Rcs\Bot\Commands\ListAllCommand::class,
-        '!first' => 'This is the first command. You found it!',
+        '!cmd' => \Rcs\Bot\Commands\ListAllCommand::class,
+        '!add' => \Rcs\Bot\Commands\ManageCommands::class . '@add',
+        '!remove' => \Rcs\Bot\Commands\ManageCommands::class . '@remove',
+    ],
+
+    'admin' => [
+        'admin'
     ],
 
 ];

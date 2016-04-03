@@ -57,7 +57,7 @@ class Bot
         $this->commandDelimiter  = config('bot.delimiters.command', '!');
         $this->commands          = collect([]);
         $this->defaultCommands   = $commands;
-        
+
         $this->initCommands($commands);
     }
 
@@ -110,6 +110,21 @@ class Bot
     }
 
     /**
+     * @param string $command
+     *
+     * @return bool
+     */
+    public function removeCommand(string $command): bool
+    {
+        if ($this->commands->has($command)) {
+            unset($this->commands[$command]);
+        }
+        Command::where('command', $command)->delete();
+
+        return true;
+    }
+
+    /**
      * @param mixed $action
      *
      * @return string
@@ -138,6 +153,7 @@ class Bot
     public function executeCommand(string $command, Message $message): bool
     {
         if ( ! $this->commands->has($command)) {
+            $this->displayMessage('Command [' . $command . '] does not exist.');
             return false;
         }
 
@@ -145,6 +161,11 @@ class Bot
         $item = $this->commands[$command];
 
         $response = $this->processAction($item, $message);
+        if ('' === $response) {
+            $this->displayMessage('Command [' . $command . '] succeeded, no output.');
+            return true;
+        }
+
         if ($item->replyToUser()) {
             $message->reply($response);
         } else {
@@ -172,9 +193,11 @@ class Bot
             if (str_contains($command->action, $this->callableDelimiter)) {
                 list($class, $method) = explode($this->callableDelimiter, $command->action);
             }
+            $this->displayMessage('Command [' . $command->command . '] running ' . $class . '@' . $method);
 
             return call_user_func_array([app($class), $method], [$message]);
         }
+        $this->displayMessage('Command [' . $command->command . '] simply replies with a message.');
 
         return $command->action;
     }
@@ -195,8 +218,19 @@ class Bot
     public function setConsoleCommand(\Illuminate\Console\Command $command)
     {
         $this->consoleCommand = $command;
-        
+
         return $this;
+    }
+
+    /**
+     * @param string $message
+     * @param string $func
+     */
+    protected function displayMessage(string $message, string $func = 'line')
+    {
+        if (null !== $this->consoleCommand) {
+            $this->consoleCommand->$func($message);
+        }
     }
 
     /**
