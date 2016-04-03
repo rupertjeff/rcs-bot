@@ -4,14 +4,14 @@ namespace Rcs\Bot\Providers;
 
 use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
 use Bot as BotFacade;
+use Discord\Discord;
 use Discord\Parts\Channel\Message;
 use Discord\WebSockets\Event;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Str;
 use Rcs\Bot\Console\Commands\Server;
-use Rcs\Bot\Services\Bot;
-use Rcs\Bot\Services\Discord;
+use Rcs\Bot\Services\Bot as BotService;
+use Rcs\Bot\Services\Discord as DiscordService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -36,17 +36,17 @@ class AppServiceProvider extends ServiceProvider
             $this->app->register(IdeHelperServiceProvider::class);
         }
         $this->app->singleton('rcs.discord', function (Application $app) {
-            return new Discord(
+            return new DiscordService(
                 env('DISCORD_USER', null),
                 env('DISCORD_PASSWORD', null)
             );
         });
         $this->app->singleton('rcs.bot', function (Application $app) {
-            return new Bot(config('bot.commands'));
+            return new BotService(config('bot.commands'));
         });
         $this->app->bind(Server::class, function () {
             $events = [
-                Event::MESSAGE_CREATE => function (Message $message, \Discord\Discord $discord) {
+                Event::MESSAGE_CREATE => function (Message $message, Discord $discord) {
                     BotFacade::refreshCommands();
                     // Is this a valid command? If no, ignore.
                     if (starts_with($message->content, '!')) {
