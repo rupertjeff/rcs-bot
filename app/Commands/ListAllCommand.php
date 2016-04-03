@@ -21,8 +21,6 @@ class ListAllCommand
 {
     /**
      * @param Message $message
-     *
-     * @return string
      */
     public function handle(Message $message)
     {
@@ -33,6 +31,6 @@ class ListAllCommand
             return $command->command;
         })->implode(', ');
         
-        return 'Here are the available commands: ' . $commandList;
+        $message->channel->sendMessage('Here are the available commands: ' . $commandList);
     }
 }
