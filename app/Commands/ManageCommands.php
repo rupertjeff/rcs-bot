@@ -23,16 +23,15 @@ class ManageCommands
     /**
      * @param Message $message
      *
-     * @return string
      * @throws \InvalidArgumentException
      */
-    public function add(Message $message): string
+    public function add(Message $message)
     {
         try {
             $this->confirmUserCanRunCommand($message);
         } catch (UserCannotExecuteCommandException $e) {
             //TODO: Log error.
-            return '';
+            return;
         }
 
         $pieces = explode(' ', $message->content);
@@ -45,22 +44,18 @@ class ManageCommands
         } catch (\Throwable $e) {
             //TODO: Log error.
         }
-        
-        return '';
     }
 
     /**
      * @param Message $message
-     *
-     * @return string
      */
-    public function remove(Message $message): string
+    public function remove(Message $message)
     {
         try {
             $this->confirmUserCanRunCommand($message);
         } catch (UserCannotExecuteCommandException $e) {
             //TODO: Log error.
-            return '';
+            return;
         }
 
         list($remove, $command) = explode(' ', $message->content);
@@ -69,8 +64,6 @@ class ManageCommands
         } catch (\Throwable $e) {
             //TODO: Log error.
         }
-        
-        return '';
     }
 
     /**
