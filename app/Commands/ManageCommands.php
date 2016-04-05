@@ -46,6 +46,26 @@ class ManageCommands
         }
     }
 
+    public function update(Message $message)
+    {
+        try {
+            $this->confirmUserCanRunCommand($message);
+        } catch (UserCannotExecuteCommandException $e) {
+            //TODO: Log error
+            return;
+        }
+
+        $pieces = explode(' ', $message->content);
+        array_shift($pieces);
+        $command = array_shift($pieces);
+        $action = implode(' ', $pieces);
+        try {
+            Bot::updateCommand($command, $action);
+        } catch (\Throwable $e) {
+            //TODO: Log error.
+        }
+    }
+
     /**
      * @param Message $message
      */

@@ -112,6 +112,22 @@ class Bot
 
     /**
      * @param string $command
+     * @param mixed  $action
+     *
+     * @return Command
+     * @throws \InvalidArgumentException
+     */
+    public function updateCommand(string $command, $action): Command
+    {
+        $cmd = $this->commands[$command];
+        $cmd->action = $this->transformAction($action);
+        $cmd->save();
+
+        return $this->commands[$command] = $cmd;
+    }
+
+    /**
+     * @param string $command
      *
      * @return bool
      */
@@ -154,7 +170,7 @@ class Bot
     public function executeCommand(string $command, Message $message): bool
     {
         if ( ! $this->commands->has($command)) {
-            $this->displayMessage('Command [' . $command . '] does not exist.');
+            $this->displayMessage('Command [' . $command . '] does not exist. Sent from guild [' . $message->fullChannel->guild->name . '], channel[' . $message->channel->name . '], user [' . $message->author->name . '].');
 
             return false;
         }
@@ -271,12 +287,12 @@ class Bot
         $this->displayMessage('Command [' . $command->command . '] running ' . $class . '@' . $method);
         try {
             app($class)->$method($message);
-            $this->displayMessage('Command [' . $command->command . '] succeeded, no output.');
+            $this->displayMessage('Command [' . $command->command . '] succeeded.');
 
             return true;
         } catch (\Exception $e) {
             $this->displayMessage('Command [' . $command->command . '] failed.');
-            
+
             return false;
         }
     }
