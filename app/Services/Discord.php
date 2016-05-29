@@ -48,7 +48,7 @@ class Discord
      * Discord constructor.
      *
      * @param string $token
-     * @param array $options
+     * @param array  $options
      */
     public function __construct(string $token = null, array $options = [])
     {

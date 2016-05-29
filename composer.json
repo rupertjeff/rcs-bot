@@ -1,11 +1,11 @@
 {
-    "name": "laravel/laravel",
-    "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
-    "license": "MIT",
+    "name": "rcs/bot",
+    "description": "A Discord/Battlefy bot for RandomCS.",
+    "keywords": ["bot", "discord", "randomcs"],
+    "license": "custom",
     "type": "project",
     "require": {
-        "php": ">=5.5.9",
+        "php": ">=7.0.4",
         "laravel/framework": "5.2.*",
         "team-reflex/discord-php": "^3.2",
         "laravelcollective/html": "^5.2",
@@ -29,9 +29,9 @@
         }
     },
     "autoload-dev": {
-        "classmap": [
-            "tests/TestCase.php"
-        ]
+        "psr-4": {
+            "Rcs\\Bot\\Tests\\": "tests/"
+        }
     },
     "scripts": {
         "post-root-package-install": [
