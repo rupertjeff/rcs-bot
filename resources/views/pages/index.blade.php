@@ -11,9 +11,12 @@
     <title>RCS Discord Bot</title>
 
     {!! Html::style(elixir('css/app.css')) !!}
+    <script>
+        window.baseUrl = '{{ url('/') }}';
+    </script>
 </head>
 <body>
-    <div class="container-fluid" id="main-app"></div>
+    <div id="main-app"></div>
 
     {!! Html::script('js/common.js') !!}
     {!! Html::script('js/app.js') !!}
