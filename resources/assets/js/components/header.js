@@ -12,8 +12,8 @@ class Header extends Component {
                     url:  '/commands'
                 },
                 {
-                    name: 'Schedule',
-                    url:  '/schedule'
+                    name: 'Schedules',
+                    url:  '/schedules'
                 }
             ]
         };

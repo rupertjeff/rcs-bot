@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import CommandService from './../services/command';
-import Command from './command'
-import AddCommandForm from './addCommandForm';
+import Command from './commands/command'
+import AddCommandForm from './commands/addCommandForm';
 
 class Commands extends Component {
     constructor(props) {
@@ -58,7 +58,7 @@ class Commands extends Component {
         return (
             <form onSubmit={this.handleSubmit}>
                 <table className="table table-bordered table-striped table-hover">
-                    <thead>
+                    <thead className="thead-default">
                         <tr>
                             <th/>
                             <th>Command</th>
