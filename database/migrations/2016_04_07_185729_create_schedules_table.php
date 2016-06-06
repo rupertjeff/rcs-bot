@@ -16,7 +16,7 @@ class CreateSchedulesTable extends Migration
             $table->increments('id');
 
             $table->string('name');
-            $table->enum('repeat', ['daily', 'weekly', 'monthly']);
+            $table->enum('repeat', ['hourly', 'daily', 'weekly', 'monthly'])->default('weekly');
             $table->timestamp('start_at');
             $table->timestamp('end_at');
 

@@ -30,7 +30,7 @@ class Create extends Request
     {
         return [
             'name' => 'required',
-            'repeat' => 'required|in:daily,weekly,monthly',
+            'repeat' => 'required|in:hourly,daily,weekly,monthly',
             'start_at' => 'required|date_format:U',
             'end_at' => 'required|date_format:U',
         ];

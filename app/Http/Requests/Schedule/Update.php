@@ -29,7 +29,7 @@ class Update extends Request
     public function rules()
     {
         return [
-            'repeat' => 'in:daily,weekly,monthly',
+            'repeat' => 'in:hourly,daily,weekly,monthly',
             'start_at' => 'date_format:U',
             'end_at' => 'date_format:U',
         ];

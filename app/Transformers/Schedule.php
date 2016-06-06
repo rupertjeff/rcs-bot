@@ -20,6 +20,13 @@ use Rcs\Bot\Database\Models\Schedule as ScheduleModel;
 class Schedule extends TransformerAbstract
 {
     /**
+     * @var array
+     */
+    protected $defaultIncludes = [
+        'messages',
+    ];
+
+    /**
      * @param ScheduleModel $schedule
      *
      * @return array
@@ -35,5 +42,15 @@ class Schedule extends TransformerAbstract
             'end_at'       => $schedule->getEndAt(),
             'repeat_count' => $schedule->getRepeatCount(),
         ];
+    }
+
+    /**
+     * @param ScheduleModel $schedule
+     *
+     * @return \League\Fractal\Resource\Collection
+     */
+    public function includeMessages(ScheduleModel $schedule)
+    {
+        return $this->collection($schedule->getMessages(), new Message);
     }
 }

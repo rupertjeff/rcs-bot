@@ -35,7 +35,7 @@ class Server extends Command
     /**
      * Create a new command instance.
      *
-     * @return void
+     * @param array $events
      */
     public function __construct($events = [])
     {

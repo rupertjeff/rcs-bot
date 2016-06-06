@@ -6,12 +6,12 @@ class CreateMessage extends Component {
 
         this.state = {
             id: 'd' + +new Date,
-            message: '',
+            content: '',
             offset:  0
         };
 
         this.handleOffsetChange  = this.handleOffsetChange.bind(this);
-        this.handleMessageChange = this.handleMessageChange.bind(this);
+        this.handleContentChange = this.handleContentChange.bind(this);
         this.handleAddMessage    = this.handleAddMessage.bind(this);
     }
 
@@ -19,7 +19,7 @@ class CreateMessage extends Component {
         return (
             <tr>
                 <td>
-                    <textarea className="form-control" value={this.state.message} onChange={this.handleMessageChange}/>
+                    <textarea className="form-control" value={this.state.content} onChange={this.handleContentChange}/>
                 </td>
                 <td>
                     <input type="number" className="form-control" value={this.state.offset} onChange={this.handleOffsetChange}/>
@@ -34,9 +34,9 @@ class CreateMessage extends Component {
         );
     }
 
-    handleMessageChange(e) {
+    handleContentChange(e) {
         this.setState({
-            message: e.target.value
+            content: e.target.value
         });
     }
 
@@ -50,7 +50,7 @@ class CreateMessage extends Component {
         this.props.addMessage(this.state);
         this.setState({
             id: 'd' + +new Date,
-            message: '',
+            content: '',
             offset: 0
         })
     }

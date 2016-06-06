@@ -6,11 +6,11 @@ class Message extends Component {
 
         this.state = {
             offset:  this.props.offset,
-            message: this.props.message,
+            content: this.props.content,
             id:      this.props.id
         };
 
-        this.handleMessageChange = this.handleMessageChange.bind(this);
+        this.handleContentChange = this.handleContentChange.bind(this);
         this.handleOffsetChange  = this.handleOffsetChange.bind(this);
         this.deleteMessage       = this.deleteMessage.bind(this);
     }
@@ -19,7 +19,7 @@ class Message extends Component {
         return (
             <tr>
                 <td>
-                    <textarea className="form-control" value={this.props.message} onChange={this.handleMessageChange}/>
+                    <textarea className="form-control" value={this.props.content} onChange={this.handleContentChange}/>
                 </td>
                 <td>
                     <input type="number" className="form-control" value={this.props.offset} onChange={this.handleOffsetChange}/>
@@ -34,9 +34,9 @@ class Message extends Component {
         );
     }
 
-    handleMessageChange(e) {
+    handleContentChange(e) {
         this.setState({
-            message: e.target.value
+            content: e.target.value
         })
     }
 

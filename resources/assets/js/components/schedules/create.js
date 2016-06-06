@@ -1,27 +1,33 @@
-import React, {Component} from 'react';
+import React, {Component, PropTypes} from 'react';
 import MessageList from './../messages/list';
+import ScheduleService from './../../services/schedule';
+import {Link} from 'react-router';
 
 class CreateSchedule extends Component {
     constructor(props) {
         super(props);
 
-        this.state        = {
+        this.state           = {
             name:        '',
-            repeat:      'daily',
+            repeat:      'weekly',
             repeatCount: 0,
             startAt:     '',
             messages:    []
         };
-        this.repeatValues = [
+        this.repeatValues    = [
+            'hourly',
             'daily',
             'weekly',
             'monthly'
         ];
+        this.scheduleService = new ScheduleService;
 
         this.handleNameChange        = this.handleNameChange.bind(this);
         this.handleRepeatChange      = this.handleRepeatChange.bind(this);
         this.handleRepeatCountChange = this.handleRepeatCountChange.bind(this);
+        this.handleStartAtChange     = this.handleStartAtChange.bind(this);
         this.updateMessages          = this.updateMessages.bind(this);
+        this.saveSchedule            = this.saveSchedule.bind(this);
     }
 
     render() {
@@ -57,10 +63,10 @@ class CreateSchedule extends Component {
                     updateMessages={this.updateMessages}
                 />
                 <div className="form-group form-actions">
-                    <button className="btn btn-warning" type="button">
+                    <Link to="/schedules" className="btn btn-warning">
                         <span className="fa fa-times"/> Cancel
-                    </button>
-                    <button className="btn btn-success" type="button">
+                    </Link>
+                    <button className="btn btn-success" type="button" onClick={this.saveSchedule}>
                         <span className="fa fa-check"/> Save
                     </button>
                 </div>
@@ -97,6 +103,56 @@ class CreateSchedule extends Component {
             messages: messages
         });
     }
+
+    saveSchedule(e) {
+        let startAt  = this.generateStartAt(this.state.startAt),
+            endAt    = this.generateEndAt(startAt, this.state.repeat, this.state.repeatCount);
+        let schedule = {
+            name:     this.state.name,
+            repeat:   this.state.repeat,
+            start_at: startAt,
+            end_at:   endAt,
+            messages: this.state.messages
+        };
+        console.log(startAt, endAt);
+
+        if (this.state.id) {
+            schedule.id = this.state.id;
+        }
+
+        this.scheduleService.save(schedule).then(() => {
+            this.context.router.push('/schedules');
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
+
+    generateStartAt(startAt) {
+        return +new Date(startAt) / 1000;
+    }
+
+    generateEndAt(startAt, repeatType, repeatCount) {
+        let msIncrement = 60 * 60 * (repeatCount + 1),
+            startAtMs   = startAt;
+
+        switch (repeatType) {
+            case 'monthly':
+                msIncrement *= 4;
+
+            case 'weekly':
+                msIncrement *= 7;
+
+            case 'daily':
+                msIncrement *= 24;
+        }
+        console.log(msIncrement);
+
+        return (startAtMs + msIncrement);
+    }
 }
+
+CreateSchedule.contextTypes = {
+    router: PropTypes.object
+};
 
 export default CreateSchedule;

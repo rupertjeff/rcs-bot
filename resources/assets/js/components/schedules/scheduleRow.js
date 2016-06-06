@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {Link} from 'react-router';
 
 class ScheduleRow extends Component {
     render() {
@@ -6,7 +7,7 @@ class ScheduleRow extends Component {
             <tr>
                 <td>{this.renderDeleteButton()}</td>
                 <td>{this.props.name}</td>
-                <td>{this.props.start_at}</td>
+                <td>{new Date(this.props.start_at * 1000).toString()}</td>
                 <td>{this.props.repeat}</td>
                 <td>{this.props.repeat_count}</td>
                 <td>{this.renderEditButton()}</td>
@@ -16,10 +17,10 @@ class ScheduleRow extends Component {
 
     renderEditButton() {
         return (
-            <button className="btn btn-info btn-sm" type="button">
+            <Link className="btn btn-info btn-sm" to={`/schedules/${this.props.id}`}>
                 <span className="sr-only">Edit Schedule</span>
                 <span className="fa fa-pencil"/>
-            </button>
+            </Link>
         );
     }
 
