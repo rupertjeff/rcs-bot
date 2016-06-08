@@ -17,6 +17,7 @@
     "babel-preset-stage-3": "^6.5.0",
     "bootstrap": "^4.0.0-alpha.2",
     "font-awesome": "^4.6.3",
+    "moment": "^2.13.0",
     "react": "^15.1.0",
     "react-dnd": "^2.1.4",
     "react-dnd-html5-backend": "^2.1.2",

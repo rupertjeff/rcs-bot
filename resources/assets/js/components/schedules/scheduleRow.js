@@ -1,13 +1,17 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router';
+import moment from 'moment';
 
 class ScheduleRow extends Component {
     render() {
+        let startAt = moment.unix(this.props.start_at),
+            startAtString = startAt.format('L LT');
+
         return (
             <tr>
                 <td>{this.renderDeleteButton()}</td>
                 <td>{this.props.name}</td>
-                <td>{new Date(this.props.start_at * 1000).toString()}</td>
+                <td>{startAtString}</td>
                 <td>{this.props.repeat}</td>
                 <td>{this.props.repeat_count}</td>
                 <td>{this.renderEditButton()}</td>

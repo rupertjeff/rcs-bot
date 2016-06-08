@@ -2,6 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import MessageList from './../messages/list';
 import ScheduleService from './../../services/schedule';
 import {Link} from 'react-router';
+import moment from 'moment';
 
 class CreateSchedule extends Component {
     constructor(props) {
@@ -114,7 +115,6 @@ class CreateSchedule extends Component {
             end_at:   endAt,
             messages: this.state.messages
         };
-        console.log(startAt, endAt);
 
         if (this.state.id) {
             schedule.id = this.state.id;
@@ -128,12 +128,11 @@ class CreateSchedule extends Component {
     }
 
     generateStartAt(startAt) {
-        return +new Date(startAt) / 1000;
+        return +moment(new Date(startAt)).format('X');
     }
 
     generateEndAt(startAt, repeatType, repeatCount) {
-        let msIncrement = 60 * 60 * (repeatCount + 1),
-            startAtMs   = startAt;
+        let msIncrement = 60 * repeatCount;
 
         switch (repeatType) {
             case 'monthly':
@@ -144,10 +143,12 @@ class CreateSchedule extends Component {
 
             case 'daily':
                 msIncrement *= 24;
+                
+            case 'hourly':
+                msIncrement *= 60;
         }
-        console.log(msIncrement);
 
-        return (startAtMs + msIncrement);
+        return +moment.unix(startAt + msIncrement).format('X');
     }
 }
 

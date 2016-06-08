@@ -183,8 +183,7 @@ class Schedule extends Model
      */
     protected function getRepeatTypeDiff(): int
     {
-        // 1 day
-        $diff = 3600;
+        $diff = 60;
         switch ($this->getRepeat()) {
             case 'monthly':
                 // assume 4 weeks in a month
