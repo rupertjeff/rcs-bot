@@ -98,7 +98,7 @@ class Bot
     public function defineCommand(string $command, array $params): Command
     {
         $command = $this->cleanCommand($command);
-        
+
         if ($this->commands->has($command)) {
             return $this->commands[$command];
         }

@@ -19,6 +19,7 @@ use Illuminate\Console\Command;
 use Rcs\Bot\Database\Models\Message;
 use Rcs\Bot\Database\Models\Schedule;
 use React\EventLoop\Factory;
+use React\EventLoop\LoopInterface;
 
 /**
  * Class Discord
@@ -27,6 +28,8 @@ use React\EventLoop\Factory;
  */
 class Discord
 {
+    private $options;
+
     /**
      * @var BaseDiscord
      */
@@ -48,6 +51,11 @@ class Discord
     protected $command;
 
     /**
+     * @var LoopInterface
+     */
+    private $loop;
+
+    /**
      * Discord constructor.
      *
      * @param string $token
@@ -55,8 +63,7 @@ class Discord
      */
     public function __construct(string $token = null, array $options = [])
     {
-        $this->loop     = Factory::create();
-        $this->instance = new BaseDiscord(array_merge($options, ['token' => $token]));
+        $this->options = array_merge($options, ['token' => $token]);
     }
 
     /**
@@ -140,6 +147,7 @@ class Discord
     public function run(): WebSocket
     {
         $this->output('Building Websocket...');
+        $this->initConnection();
         $this->buildScheduler();
         $ws = new WebSocket($this->instance, $this->loop);
 
@@ -216,5 +224,13 @@ class Discord
             }
             $this->command->$type($text);
         }
+    }
+
+    protected function initConnection()
+    {
+        $this->loop     = Factory::create();
+        $this->instance = new BaseDiscord($this->options);
+
+        return $this;
     }
 }
