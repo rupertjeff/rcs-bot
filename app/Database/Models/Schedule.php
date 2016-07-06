@@ -34,7 +34,7 @@ class Schedule extends Model
     public static function getMessagesToSend($timestamp = null): Collection
     {
         if (null === $timestamp) {
-            $timestamp = new Carbon;
+            $timestamp = Carbon::now();
         }
 
         // get messages that should be posted
@@ -88,7 +88,7 @@ class Schedule extends Model
     {
         $times[] = Carbon::createFromTimestamp($schedule->getStartAt());
 
-        for ($i = 0; $i < $schedule->getRepeatCount(); ++$i) {
+        for ($i = 1; $i < $schedule->getRepeatCount(); $i++) {
             $times[] = Carbon::createFromTimestamp(
                 $times[$i - 1]->format('U') + $schedule->getRepeatTypeDiff()
             );
@@ -199,6 +199,7 @@ class Schedule extends Model
                 $diff *= 24;
 
             case 'hourly':
+                // get 1 hour
                 $diff *= 60;
         }
 

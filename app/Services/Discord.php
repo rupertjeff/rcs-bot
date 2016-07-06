@@ -28,6 +28,9 @@ use React\EventLoop\LoopInterface;
  */
 class Discord
 {
+    /**
+     * @var array
+     */
     private $options;
 
     /**
@@ -154,7 +157,6 @@ class Discord
         $this->output('Attaching Events...');
         $ws->on('ready', function () use ($ws) {
             $this->output('Connected and Ready!');
-            $this->output($this->getGuilds()->pluck('name'));
             $this->attachEvents($ws);
         });
 
@@ -168,7 +170,7 @@ class Discord
     {
         $this->output('Adding Timer for Scheduled Messages...');
         $this->loop->addPeriodicTimer(1, function () {
-            $generalChannel = $this->getChannel('general', 'Vex');
+            $generalChannel = $this->getChannel(config('bot.defaultChannel'), config('bot.defaultGuild'));
             /** @var \Illuminate\Database\Eloquent\Collection $messages */
             $messages = $this->getScheduledMessages();
             $messages->each(function (Message $message) use ($generalChannel) {
@@ -182,7 +184,7 @@ class Discord
      */
     protected function getScheduledMessages()
     {
-        return Schedule::getMessagesToSend(new Carbon);
+        return Schedule::getMessagesToSend(Carbon::now());
     }
 
     /**
@@ -226,6 +228,9 @@ class Discord
         }
     }
 
+    /**
+     * @return $this
+     */
     protected function initConnection()
     {
         $this->loop     = Factory::create();

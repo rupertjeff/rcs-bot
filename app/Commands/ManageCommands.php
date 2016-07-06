@@ -93,7 +93,7 @@ class ManageCommands
      */
     protected function confirmUserCanRunCommand(Message $message)
     {
-        $adminRoles = config('bot.admin');
+        $adminRoles = config('bot.adminRoles');
         $user = \Discord::getGuild($message->fullChannel->guild->name)->members->get('id', $message->author->id);
         /** @var \Discord\Helpers\Collection $same */
         $same = $user->roles->filter(function ($value) use ($adminRoles) {
